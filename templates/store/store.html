@@ -5,7 +5,11 @@
 {% block content %}
 <section class="section-pagetop bg">
     <div class="container">
+        {% if 'search' in request.path %}
+        <h2 class="title-page">search result</h2>
+        {% else %}
         <h2 class="title-page">Our Store</h2>
+        {% endif %}
         
     </div> <!-- container //  -->
     </section>
@@ -124,6 +128,7 @@
         </header><!-- sect-heading -->
         
         <div class="row">
+            {% if products %}
             {% for product in products %}
             <div class="col-md-4">
                 <figure class="card card-product-grid">
@@ -146,7 +151,9 @@
             </div> <!-- col.// -->
         
             {% endfor %}
-                       
+            {% else %}
+            <div>No Results Found</div> 
+            {% endif %}          
         </div> <!-- row end.// -->
         
         
