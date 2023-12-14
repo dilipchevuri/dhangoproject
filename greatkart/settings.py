@@ -90,7 +90,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecommerce',
+        'NAME': 'ecommerce4',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',   # Set to the host where your PostgreSQL server is running
@@ -158,8 +158,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'peramreddy@gmail.com'
-# EMAIL_HOST_PASSWORD = 'Reddy@1234'
+# EMAIL_HOST_USER = 'peramreddy1122@gmail.com'
+# EMAIL_HOST_PASSWORD = 'zhhq tmmm fktu vcnr'
 # EMAIL_USE_TLS = True
 
 
