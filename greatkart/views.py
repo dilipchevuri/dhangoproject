@@ -12,7 +12,7 @@ def home(request):
 
     # Initialize reviews as an empty list 
 
-    reviews = [] 
+    reviews = None
 
  
 

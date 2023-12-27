@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'store',
     'carts',
     'orders',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -91,14 +93,33 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ecommerce4',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',   # Set to the host where your PostgreSQL server is running
+        'USER': 'ecommerce4',
+        'PASSWORD': 'lohitha1234',
+        'HOST': 'ecommerce4.cgrm4qjdpp7k.us-east-1.rds.amazonaws.com',   # Set to the host where your PostgreSQL server is running
         'PORT': '5432',
 
     }
 }
+# # Database Configuration
 
+if 'RDS_DB_NAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -134,16 +155,43 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR /'static'
+# STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR /'static'
+# STATICFILES_DIRS = [
+#     'greatkart/static',
+# ]
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_LOCATION = 'static'
+
 STATICFILES_DIRS = [
     'greatkart/static',
 ]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+DEFAULT_FILE_STORAGE = 'greatkart.media_storage.py.MediaStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media'
 
 
+# AWS_ACCESS_KEY_ID = 'AKIAW4TZYNGPWJ7QKDDX '
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'greatkarts3bucket'
+# AWS_S3_SIGNATURE_NAME = 's3v4',
+# AWS_S3_REGION_NAME = 'AWS_S3_REGION_NAME'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL =  None
+# AWS_S3_VERITY = True
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 from django.contrib.messages import constants as messages
 
@@ -168,3 +216,5 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+
+
